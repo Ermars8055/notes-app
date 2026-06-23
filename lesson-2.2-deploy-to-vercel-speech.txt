@@ -1,0 +1,455 @@
+================================================================================
+CONESTA FORGE — BUILD YOUR OWN AI WEB APPLICATION
+LESSON 2.2 — DEPLOY TO VERCEL
+TRAINER'S SPEECH & LECTURE SCRIPT
+Duration: ~18 minutes | Day 2 of 5
+================================================================================
+
+HOW TO USE THIS SCRIPT
+-----------------------
+- Text in [INSTRUCTOR ACTION] = what you DO on screen, not what you say out loud.
+- Text in quotation marks = what you SAY to the class.
+- Pause after each section and check that students are following before moving on.
+- If a student is stuck at any step, stop the class. Do not leave anyone behind
+  on deploy day — they will be blocked for the rest of the course.
+
+================================================================================
+OPENING HOOK — (1 minute)
+================================================================================
+
+"Before we do anything else, I want you to think about this.
+
+Right now, your app lives on your laptop. That means only YOU can see it.
+If I ask you to show me your app, you have to be sitting next to your machine.
+If your laptop dies, the app dies.
+
+An app on your laptop is a science project.
+An app with a public URL is something a stranger can actually use —
+and a judge can actually open.
+
+Today we fix that.
+
+By the end of this lesson, every one of you will have a live URL on the internet
+that anyone in this room can open on their phone right now.
+
+That is today's goal. One live URL. Let's go."
+
+================================================================================
+SECTION 1 — WHY WE DEPLOY TODAY, NOT DAY 5 (~3 minutes)
+================================================================================
+
+"You might be wondering — why are we deploying NOW?
+
+We haven't added AI yet. We haven't polished anything. Why not wait until we're
+done and deploy at the very end?
+
+Here is the answer: the FIRST deploy is always the most painful one.
+
+There are three specific things that break on first deploy almost every single time.
+I call them the three deploy walls.
+
+We are going to hit all three today, on Day 2, while it's low-stakes.
+Nothing critical is on the line yet.
+
+If we wait until Day 5 and hit these walls at the deadline, you're in trouble.
+You can't submit a broken URL. So we do the painful part now, while it's cheap.
+
+Also — and this is important — once your GitHub repo is connected to Vercel,
+every time you push code, Vercel automatically rebuilds and redeploys your site.
+
+That means from today onwards, every 'git push' goes live automatically.
+You never have to think about deploying again.
+
+Push code, site updates. That simple."
+
+================================================================================
+SECTION 2 — WHAT IS VERCEL (2 minutes)
+================================================================================
+
+"Let me give you a quick definition before we start clicking things.
+
+What is Vercel?
+
+Vercel is a hosting platform. You give it your GitHub repo, it reads your code,
+builds it, and gives you a public URL that anyone can visit.
+
+It knows how to run Next.js apps perfectly — it was actually made by the same
+people who built Next.js. So it just works.
+
+It is completely free for personal projects. No credit card needed.
+
+Think of it this way:
+  - GitHub is where your CODE lives (the filing cabinet)
+  - Vercel is where your APP runs (the shop front)
+
+GitHub stores it. Vercel runs it.
+
+They are connected — Vercel watches your GitHub repo, and any time you push
+a change, it automatically picks it up and redeploys.
+
+Clear? Good. Let's build."
+
+================================================================================
+SECTION 3 — STEP BY STEP: DEPLOYING TO VERCEL (~5 minutes)
+================================================================================
+
+"Follow along on your own screen. We will do every step together."
+
+------------------------------------------------------------------------
+STEP 1 — Push your latest code to GitHub
+------------------------------------------------------------------------
+
+[INSTRUCTOR ACTION: Open terminal on screen]
+
+"First, make sure your latest code is on GitHub.
+Open your terminal and run these three commands:"
+
+    git add .
+    git commit -m "ready for deploy"
+    git push
+
+"If you see any errors here — stop. Raise your hand. Do not move forward
+until your code is successfully on GitHub.
+
+Now go to github.com, find your repo, and refresh the page.
+You should see your latest files listed there.
+That is your confirmation. If the files are there, your code is on GitHub."
+
+[Pause — wait for students to confirm]
+
+------------------------------------------------------------------------
+STEP 2 — Create a Vercel account
+------------------------------------------------------------------------
+
+[INSTRUCTOR ACTION: Open vercel.com in browser]
+
+"Open a new browser tab and go to vercel.com.
+
+Click 'Sign Up'. Sign up with your GitHub account — this is important.
+Signing up with GitHub means Vercel can see your repos automatically.
+It's free. No credit card.
+
+Once you're logged in, you'll see the Vercel dashboard."
+
+[Pause — wait for students to log in]
+
+------------------------------------------------------------------------
+STEP 3 — Import your repository
+------------------------------------------------------------------------
+
+[INSTRUCTOR ACTION: Click Add New Project in Vercel dashboard]
+
+"On the Vercel dashboard, click the button that says 'Add New Project'
+or 'New Project'.
+
+Vercel will show you a list of your GitHub repositories.
+Find your project repo in the list and click 'Import'.
+
+On the next configuration screen, you will see project settings.
+DO NOT change the framework preset — Vercel automatically detects Next.js
+and sets it correctly.
+
+BUT — before you click Deploy — STOP.
+
+This is where beginners get burned.
+
+We need to do two things first before we click that Deploy button.
+If you click Deploy right now without doing these two things, your app
+will break and you will spend an hour confused about why.
+
+So everyone: hands off the Deploy button. Follow me."
+
+================================================================================
+SECTION 4 — THE THREE DEPLOY WALLS (~8 minutes)
+================================================================================
+
+"Almost every beginner hits the same three walls on first deploy.
+I am going to walk you through all three right now.
+
+Pay close attention. This is the most important part of today's lesson."
+
+========================================
+WALL 1 — ENVIRONMENT VARIABLES (3 min)
+========================================
+
+"Remember the file on your machine called .env.local?
+
+That file holds your MONGODB_URI — the secret connection string for your database.
+
+Here is the problem:
+.env.local is in your .gitignore file. This means it was NEVER pushed to GitHub.
+Vercel has never seen it. When Vercel builds your app and tries to connect to
+MongoDB, it finds nothing. Your app crashes immediately.
+
+The fix: you must manually tell Vercel your environment variables.
+
+On the Vercel project settings screen — the one you are looking at right now —
+find the section called 'Environment Variables'. Click to expand it.
+
+Add the following:"
+
+[INSTRUCTOR ACTION: Show Environment Variables section in Vercel]
+
+    Name:   MONGODB_URI
+    Value:  [paste your full connection string from .env.local]
+
+"Your connection string looks something like this:
+
+    mongodb+srv://yourname:yourpassword@cluster0.abc123.mongodb.net/yourappname
+
+Paste the full string.
+No spaces before or after.
+No quote marks around it.
+Just the raw string, exactly as it appears in your .env.local file.
+
+Now — and this is a rule for the rest of your career —
+NEVER put your real connection string in your code.
+NEVER put it in your README.
+NEVER commit it to GitHub.
+
+Secrets live in .env.local on your machine, and in Vercel's environment variable
+panel in the cloud. Nowhere else."
+
+[Pause — check students have entered the variable]
+
+========================================
+WALL 2 — MONGODB ATLAS NETWORK ACCESS (3 min)
+========================================
+
+"Here is the second wall. This one is sneaky because your app will BUILD
+successfully — Vercel will show a green checkmark — but when you actually try
+to USE your app, it times out when connecting to the database.
+
+The reason: MongoDB Atlas, by default, only allows connections from your home
+IP address. Vercel's servers are in a data center somewhere in the world with
+completely different IP addresses. Atlas sees an unknown IP trying to connect
+and blocks it.
+
+The fix is simple. You need to tell Atlas to allow connections from anywhere.
+
+Open a new browser tab. Go to mongodb.com and log in to your Atlas account.
+Click on your project, then find 'Network Access' in the left sidebar."
+
+[INSTRUCTOR ACTION: Show MongoDB Atlas Network Access page]
+
+"You will see a list of allowed IP addresses.
+Click the button: 'Add IP Address'.
+
+You will see an option that says 'Allow Access from Anywhere'.
+Click that. It will fill in the value:   0.0.0.0/0
+
+That notation means: all IP addresses, everywhere, no restrictions.
+
+Click Confirm.
+
+I know this sounds scary. For a real production app you would restrict this later.
+But for this course, if you do NOT do this, your deployed app will never connect
+to your database. So: open it up."
+
+[Pause — check students have added 0.0.0.0/0]
+
+========================================
+WALL 3 — EXACT CONNECTION STRING (2 min)
+========================================
+
+"The third wall is simple but it trips people up every time.
+
+Your connection string must be exactly right. Completely exact.
+
+Common mistakes:
+  - A typo anywhere in the string
+  - Extra space at the beginning or end when you pasted it
+  - Wrong database name at the end of the string
+  - Using an old password that you changed later
+
+The connection string format is:
+
+    mongodb+srv://USERNAME:PASSWORD@CLUSTER.mongodb.net/DATABASENAME
+
+Every part of that string matters.
+If it's wrong by even one character, the connection fails silently.
+
+Right now: go back to your MongoDB Atlas dashboard.
+Click on your cluster, then click 'Connect', then 'Connect your application'.
+Copy the connection string fresh from there.
+Replace USERNAME and PASSWORD with your actual credentials.
+Paste it fresh into Vercel's environment variable panel.
+
+Do not use a string you typed by hand. Always copy it directly from Atlas."
+
+[Pause — check students have verified their connection string]
+
+================================================================================
+SECTION 5 — CLICK DEPLOY AND WATCH THE BUILD (2 minutes)
+================================================================================
+
+"Now. We have:
+  - Code pushed to GitHub
+  - MONGODB_URI entered in Vercel environment variables
+  - MongoDB Atlas network access open to 0.0.0.0/0
+  - Connection string verified and exact
+
+NOW you can click Deploy."
+
+[INSTRUCTOR ACTION: Click Deploy button in Vercel]
+
+"Vercel will now build your project. You will see a build log scrolling down
+the screen. This takes about 30 to 60 seconds.
+
+Watch for errors. The most common build error is a TypeScript or import error
+that your local machine ignored but Vercel is strict about.
+
+If it fails — look at the last few lines of the build log. The error will be
+there. Read it out loud to me or raise your hand.
+
+If it succeeds — you will see a green checkmark and a URL.
+That URL is your live app. On the internet. Right now."
+
+[Pause — wait for builds to complete]
+
+"Does everyone have a green build? Good. Now — the build being green does NOT
+mean the app works. We have one more step."
+
+================================================================================
+SECTION 6 — TEST LIKE A STRANGER (2 minutes)
+================================================================================
+
+"This is the most important test you will do today.
+
+I need you to open your live URL in a FRESH INCOGNITO window.
+Not a regular tab. Incognito. A fresh browser where you are not logged in,
+where no local state exists. You are pretending to be a stranger who has
+never seen this app.
+
+[INSTRUCTOR ACTION: Open Vercel URL in incognito window]
+
+Now do the core loop of your app:
+  1. Create an item — add a piece of data using your form
+  2. Reload the page
+  3. Confirm the item is still there
+
+If the item survived a page reload, your data is being saved to MongoDB Atlas.
+That is real persistence. That is your app working for real.
+
+A green build can still fail at runtime. The only test that counts is exercising
+the real loop in a fresh browser.
+
+If your app loads but adding data fails — it is almost certainly Wall 2.
+Go back to Atlas Network Access and confirm 0.0.0.0/0 is saved.
+
+If your app does not load at all — it is almost certainly Wall 1.
+Go back to Vercel environment variables and check your MONGODB_URI."
+
+================================================================================
+SECTION 7 — DISCUSSION PROMPT (2 minutes)
+================================================================================
+
+"Now we are going to do something fun.
+
+Everyone who has a working live URL — and you should all have one —
+turn to the person next to you and swap URLs.
+
+Open their URL on your phone or in your browser.
+Add an item to their app.
+They add an item to yours.
+
+Then reload. Is their data still there? Is yours?
+
+This is what 'deployed' means. A stranger just used your app.
+That is a real thing that exists on the internet right now."
+
+[Give students 2-3 minutes to do this]
+
+================================================================================
+SECTION 8 — KNOWLEDGE CHECK QUESTIONS (2 minutes)
+================================================================================
+
+"Before we move on, let me ask four quick questions. Call out the answers."
+
+QUESTION 1:
+"Why do we deploy on Day 2 instead of waiting until Day 5?"
+
+ANSWER:
+"Deploy config is required today, and the first deploy is always fiddly —
+fight it while it's low-stakes, not at the deadline."
+
+---
+
+QUESTION 2:
+"Once your GitHub repo is connected to Vercel, what happens every time you push?"
+
+ANSWER:
+"Vercel automatically rebuilds and redeploys the live site. Push code, site updates."
+
+---
+
+QUESTION 3:
+"Your deployed app times out connecting to MongoDB but it works locally. Most likely cause?"
+
+ANSWER:
+"Atlas Network Access doesn't allow Vercel's servers.
+Add 0.0.0.0/0 in Atlas Network Access and confirm your MONGODB_URI env var is set."
+
+---
+
+QUESTION 4:
+"How do you PROPERLY test that your deploy actually works?"
+
+ANSWER:
+"Open the public URL in a fresh incognito browser and run the core loop:
+add an item, reload, confirm it survived. A green build is not enough."
+
+================================================================================
+SECTION 9 — RECAP AND CLOSE (1 minute)
+================================================================================
+
+"Let me summarise what you did today.
+
+You took an app that only existed on your laptop and put it on the internet.
+
+You learned the three deploy walls every beginner hits:
+  Wall 1 — Environment variables must be re-entered in Vercel manually
+  Wall 2 — MongoDB Atlas Network Access must be opened to 0.0.0.0/0
+  Wall 3 — Your connection string must be exactly right — copy it fresh from Atlas
+
+You know that a green Vercel build does not mean your app works.
+You must test it as a stranger in an incognito window.
+
+And from now on, every git push you make will automatically redeploy your live site.
+
+Watch the recap video at the end of this lesson in the course platform.
+You must watch it through to complete the lesson and unlock tomorrow.
+
+Tomorrow — Day 3 — we add the AI. We make your app talk to a language model.
+See you then."
+
+================================================================================
+QUICK REFERENCE CARD — STICK THIS ON THE WALL
+================================================================================
+
+THE THREE DEPLOY WALLS — always fix these before or right after first deploy:
+
+  1. ENVIRONMENT VARIABLES
+     Go to: Vercel project → Settings → Environment Variables
+     Add:   MONGODB_URI = [your full Atlas connection string]
+
+  2. MONGODB ATLAS NETWORK ACCESS
+     Go to: MongoDB Atlas → Network Access → Add IP Address
+     Add:   0.0.0.0/0   (Allow Access from Anywhere)
+
+  3. CONNECTION STRING MUST BE EXACT
+     Get it fresh from: Atlas → Connect → Connect your application
+     Replace USERNAME and PASSWORD with your real credentials
+
+HOW TO TEST A DEPLOY:
+  Open live URL in fresh incognito window → add an item → reload → confirm it's there
+
+WHAT VERCEL DOES AUTOMATICALLY:
+  Every git push to main → Vercel rebuilds → live site updates
+
+WHAT .env.local IS FOR:
+  Secrets on your machine — NEVER commit to GitHub, NEVER write in code
+
+================================================================================
+END OF LESSON 2.2 SCRIPT
+================================================================================
